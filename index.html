@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>My Profile</title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.22/dist/full.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -16,7 +16,7 @@
     <main id="app">
         <div class="navbar bg-base-100 fixed bg-transparent">
             <div class="flex-1">
-                <a class="btn btn-ghost text-xl">daisyUI</a>
+                <a class="btn btn-ghost text-xl">My Profile</a>
             </div>
             <div class="flex-none">
                 <div class="dropdown dropdown-end">
@@ -42,12 +42,25 @@
         <div class="hero bg-base-200 min-h-screen">
             <div class="hero-content text-center">
                 <div class="max-w-md">
-                    <h1 class="text-5xl font-bold">Hello' {{user.username}}</h1>
+                    <h1 class="text-5xl font-bold">Hello'
+                        <label class="swap swap-flip mt-2">
+                            <!-- this hidden checkbox controls the state -->
+                            <input type="checkbox" />
+                            <div class="swap-on">
+                                <template v-if="(user.fname && user.lname)">
+                                    {{ user.fname }} {{user.lname}}
+                                </template>
+                                <template v-else>
+                                    <a href="./profile.html">Edit your profile</a>
+                                </template>
+                            </div>
+                            <div class="swap-off">{{user.username}}</div>
+                        </label>
+                    </h1>
                     <p class="py-6">
-                        Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem
-                        quasi. In deleniti eaque aut repudiandae et a id nisi.
+                        {{text}}
                     </p>
-                    <button class="btn btn-primary">Get Started</button>
+
                 </div>
             </div>
         </div>
@@ -59,12 +72,17 @@
                 data() {
                     return {
                         token: null,
-                        user: {}
+                        user: {},
+                        text: "Hello"
                     };
                 },
                 mounted() {
                     console.log('mounted');
                     this.token = localStorage.getItem('token');
+                    axios.get('https://zenquotes.io/api/random').then((response) => {
+                        this.text = response.data[0].q;
+                        console.log(this.text);
+                    });
                     if (!this.token) {
                         location.replace("/login.html");
                     }
@@ -73,8 +91,9 @@
                         console.log(response.data);
                         this.user = response.data;
                     });
+
                 },
-                methods:{
+                methods: {
                     logout() {
                         localStorage.removeItem('token');
                         location.replace("/login.html");

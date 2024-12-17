@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Login</title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.22/dist/full.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -44,6 +44,9 @@
                         </div>
                         <div class="form-control mt-6">
                             <button type="submit" class="btn btn-primary">Login</button>
+                        </div>
+                        <div class="text-center mt-6">
+                            <a href="/register.html" class="link link-hover">Don't have an account? Sign up now!</a>
                         </div>
                     </form>
                 </div>
@@ -85,7 +88,6 @@
 
                                         location.replace("/")
                                     }
-
                                 }).catch((err) => {
 
                                 });

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.22/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+    <main id="app">
+        <div class="hero bg-base-200 min-h-screen">
+            <div class="hero-content flex-col lg:flex-row-reverse">
+                <div class="text-center lg:text-left">
+                    <h1 class="text-5xl font-bold">Register now!</h1>
+                    <p class="py-6">
+                        Join us today and explore amazing features. Let's get you started with a new account!
+                    </p>
+                </div>
+                <div class="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+                    <form class="card-body" @submit.prevent="submitRegister">
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">email</span>
+                            </label>
+                            <input type="email" placeholder="Enter email" class="input input-bordered" v-model="email" required />
+                        </div>
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Username</span>
+                            </label>
+                            <input type="text" placeholder="Enter username" class="input input-bordered" v-model="username" required />
+                        </div>
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Password</span>
+                            </label>
+                            <input type="password" placeholder="Enter password" class="input input-bordered" v-model="password" required />
+                        </div>
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Confirm Password</span>
+                            </label>
+                            <input type="password" placeholder="Confirm password" class="input input-bordered" v-model="confirmPassword" required />
+                        </div>
+                        <div class="form-control mt-6">
+                            <button type="submit" class="btn btn-primary">Register</button>
+                        </div>
+                        <div class="">
+                            <p class="text-center">Already have an account? <a href="/login.html" class="text-primary">Login</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        const { createApp } = Vue;
+        createApp({
+            data() {
+                return {
+                    email:"",
+                    username: "",
+                    password: "",
+                    confirmPassword: "",
+                };
+            },
+            methods: {
+                async submitRegister() {
+                    if (this.password !== this.confirmPassword) {
+                        Swal.fire({
+                            title: "Error!",
+                            text: "Passwords do not match!",
+                            icon: "error"
+                        });
+                        return;
+                    }
+                    try {
+                        const response = await axios.post('https://express-test-api-l0zc.onrender.com/register', {
+                            username: this.username,
+                            password: this.password,
+                            email: this.email,
+                        });
+                        if (response.status === 201) {
+                            Swal.fire({
+                                title: "Success!",
+                                text: response.data.message,
+                                icon: "success"
+                            });
+                            location.replace("/login.html"); // Redirect to login
+                        }
+                    } catch (error) {
+                        Swal.fire({
+                            title: "Registration Failed!",
+                            text: error.response?.data?.message || "Something went wrong!",
+                            icon: "error"
+                        });
+                    }
+                }
+            }
+        }).mount("#app");
+    </script>
+</body>
+
+</html>

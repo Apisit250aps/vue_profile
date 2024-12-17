@@ -4,12 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Profile</title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.22/dist/full.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
     <style>
         /* Hide scrollbar for Chrome, Safari and Opera */
         *::-webkit-scrollbar {
@@ -34,12 +35,12 @@
                 <!-- Page content here -->
                 <div class="navbar bg-base-100 bg-transparent">
                     <div class="flex-none">
-                        <label for="my-drawer-2" class="btn btn-primary drawer-button lg:hidden">
-                            Open drawer
+                        <label for="my-drawer-2" class="btn btn-ghost drawer-button lg:hidden">
+                            <i class='bx bx-menu-alt-left'></i>
                         </label>
                     </div>
                     <div class="flex-1">
-                        <a href="/index.html" class="btn btn-ghost text-xl">daisyUI</a>
+                        <a href="/index.html" class="btn btn-ghost text-xl">{{user.username}}</a>
                     </div>
                 </div>
                 <main class="p-3">
