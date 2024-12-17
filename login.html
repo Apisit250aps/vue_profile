@@ -70,7 +70,7 @@
                 methods: {
                     async submitLogin(e) {
                         e.preventDefault();
-                        console.log("asd");
+                    
                         if (true) {
                             try {
                                 await axios.post('https://express-test-api-l0zc.onrender.com/login', {
@@ -86,7 +86,7 @@
                                             icon: "success"
                                         });
 
-                                        location.replace("/")
+                                        location.replace("./index.html")
                                     }
                                 }).catch((err) => {
 

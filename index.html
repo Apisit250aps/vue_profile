@@ -84,19 +84,18 @@
                         console.log(this.text);
                     });
                     if (!this.token) {
-                        location.replace("login.html");
+                        location.replace("./login.html");
                     }
                     axios.defaults.headers.common["Authorization"] = `Bearer ${this.token}`;
                     axios.get('https://express-test-api-l0zc.onrender.com/profile').then((response) => {
                         console.log(response.data);
                         this.user = response.data;
                     });
-
                 },
                 methods: {
                     logout() {
                         localStorage.removeItem('token');
-                        location.replace("login.html");
+                        location.replace("./login.html");
                     }
                 }
             }
