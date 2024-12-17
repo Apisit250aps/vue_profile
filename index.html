@@ -57,8 +57,11 @@
                             <div class="swap-off">{{user.username}}</div>
                         </label>
                     </h1>
-                    <p class="py-6">
-                        {{text}}
+                    <p class="py-3">
+                        <h2 class="text-2xl">
+                            <b>To day is tomorrow of yesterday!</b>
+                        </h2>
+                        <p>-- Apisit --</p>
                     </p>
 
                 </div>
@@ -79,10 +82,7 @@
                 mounted() {
                     console.log('mounted');
                     this.token = localStorage.getItem('token');
-                    axios.get('https://zenquotes.io/api/random').then((response) => {
-                        this.text = response.data[0].q;
-                        console.log(this.text);
-                    });
+                   
                     if (!this.token) {
                         location.replace("./login.html");
                     }
