@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.22/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        *::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        * {
+            -ms-overflow-style: none;
+            /* IE and Edge */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+    </style>
+</head>
+
+<body>
+    <main id="app">
+        <div class="drawer lg:drawer-open">
+            <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
+            <div class="drawer-content">
+                <!-- Page content here -->
+                <div class="navbar bg-base-100 bg-transparent">
+                    <div class="flex-none">
+                        <label for="my-drawer-2" class="btn btn-primary drawer-button lg:hidden">
+                            Open drawer
+                        </label>
+                    </div>
+                    <div class="flex-1">
+                        <a href="/index.html" class="btn btn-ghost text-xl">daisyUI</a>
+                    </div>
+                </div>
+                <main class="p-3">
+                    <template v-if="loading">
+                        <div class="flex justify-center align-center">
+                            <span class="loading loading-dots loading-lg"></span>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <div class="card ">
+                            <div class="card-body">
+                                <div class="card-title">
+                                    <div class="stats">
+                                        <div class="stat">
+                                            <div class="stat-figure text-secondary">
+                                                <div class="avatar online">
+                                                    <div class="w-16 rounded-full">
+                                                        <img
+                                                            src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="stat-value">86%</div>
+                                            <div class="stat-title">Tasks done</div>
+                                            <div class="stat-desc text-secondary">31 tasks remaining</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="">
+                                    <form action="">
+                                        <div class=" mb-3">
+                                            <label class="input flex items-center gap-2">
+                                                Username
+                                                <input type="text" class="grow" v-model="user.username" readonly />
+                                            </label>
+                                        </div>
+                                        <div class=" mb-3">
+                                            <label class="input flex items-center gap-2">
+                                                Email
+                                                <input type="text" class="grow" v-model="user.email" readonly />
+                                            </label>
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-2 mb-3">
+                                            <label class="input flex items-center gap-2">
+                                                First name
+                                                <input type="text" class="grow" v-model="user.fname" readonly />
+                                            </label>
+                                            <label class="input flex items-center gap-2">
+                                                Last name
+                                                <input type="text" class="grow" v-model="user.lname" readonly />
+                                            </label>
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-2 mb-3">
+                                            <label class="input flex items-center gap-2">
+                                                Province
+                                                <input type="text" class="grow" v-model="user.province" readonly />
+                                            </label>
+                                            <label class="input flex items-center gap-2">
+                                                District
+                                                <input type="text" class="grow" v-model="user.district" readonly />
+                                            </label>
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-2 mb-3">
+                                            <label class="input flex items-center gap-2">
+                                                Sub district
+                                                <input type="text" class="grow" v-model="user.sub_district" readonly />
+                                            </label>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="flex justify-end">
+                                    <button class="btn btn-primary" @click="setEdit">Edit</button>
+                                    <dialog id="my_modal_3" class="modal">
+                                        <div class="modal-box">
+                                            <form method="dialog">
+                                                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                                                    ref="closeModal">✕</button>
+                                            </form>
+                                            <h3 class="text-lg font-bold mb-3">Edit profile!</h3>
+                                            <template v-if="form_loading">
+                                                <div class="flex justify-center align-center">
+                                                    <span class="loading loading-dots loading-lg"></span>
+                                                </div>
+                                            </template>
+                                            <template v-else>
+                                                <form @submit.prevent="submitUpdate">
+                                                    <div class=" mb-3">
+                                                        <label class="input input-bordered flex items-center gap-2">
+                                                            Email
+                                                            <input type="text" class="grow" v-model="user.email" />
+                                                        </label>
+                                                    </div>
+                                                    <div class="grid grid-cols-1 gap-2 mb-3">
+                                                        <label class="input input-bordered flex items-center gap-2">
+                                                            First name
+                                                            <input type="text" class="grow" v-model="user.fname" />
+                                                        </label>
+                                                        <label class="input input-bordered flex items-center gap-2">
+                                                            Last name
+                                                            <input type="text" class="grow" v-model="user.lname" />
+                                                        </label>
+                                                    </div>
+                                                    <div class="grid grid-cols-1 gap-2 mb-3">
+                                                        <select class="select select-bordered w-full"
+                                                            @change="onProvinceChanged" v-model="user.province">
+                                                            <option value="">Select province</option>
+                                                            <option v-for="(item, index) in provinces" :key="index">
+                                                                {{item}}
+                                                            </option>
+                                                        </select>
+                                                        <select class="select select-bordered w-full"
+                                                            @change="onDistrictChanged" v-model="user.district">
+                                                            <option value="">Select district</option>
+                                                            <option v-for="(item, index) in districts" :key="index">
+                                                                {{item}}
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="grid grid-cols-1 gap-2 mb-3">
+                                                        <select class="select select-bordered w-full"
+                                                            v-model="user.sub_district">
+                                                            <option value="">Select sub district</option>
+                                                            <option v-for="(item, index) in sub_districts" :key="index">
+                                                                {{item}}</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class=" flex justify-end">
+                                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                                    </div>
+                                                </form>
+                                            </template>
+                                        </div>
+                                    </dialog>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </main>
+            </div>
+            <div class="drawer-side">
+                <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
+
+                <ul class="menu bg-base-200 text-base-content min-h-full w-80 p-4">
+                    <li>
+                        <h2 class="menu-title">Manage</h2>
+                        <ul>
+                            <li><a class="active">Profile</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+    <script>
+        const { createApp } = Vue;
+        createApp(
+            {
+                data() {
+                    return {
+                        loading: true,
+                        form_loading: false,
+                        token: null,
+                        user: {},
+                        base_url: "https://express-test-api-l0zc.onrender.com",
+                        provinces: [],
+                        districts: [],
+                        sub_districts: [],
+                    };
+                },
+                async mounted() {
+                    this.token = localStorage.getItem('token');
+                    if (!this.token) {
+                        location.replace("/login.html");
+                    }
+                    await this.loadProvinces();
+                    axios.defaults.headers.common["Authorization"] = `Bearer ${this.token}`;
+                    await axios.get(`${this.base_url}/profile`).then((response) => {
+                        this.user = response.data;
+                    });
+                    this.loading = false;
+                },
+                methods: {
+                    logout() {
+                        localStorage.removeItem('token');
+                        location.replace("/login.html");
+                    },
+                    async setEdit() {
+                        this.form_loading = true;
+                        my_modal_3.showModal();
+                        if (this.user.province) {
+                            await this.loadDistrict(this.user.province);
+                            await this.loadSubDistrict(this.user.province, this.user.district);
+                        }
+                        else {
+                            this.user.province = "";
+                            this.user.district = "";
+                            this.user.sub_district = "";
+                        }
+
+                        this.form_loading = false;
+                    },
+                    async loadProvinces() {
+                        await axios.get(`${this.base_url}/provinces`).then((response) => {
+                            this.provinces = response.data;
+                        });
+                    },
+                    async loadDistrict(province) {
+                        await axios.get(`${this.base_url}/provinces/${province}`).then((response) => {
+                            this.districts = response.data;
+                        });
+                    },
+                    async loadSubDistrict(province, district) {
+                        await axios.get(`${this.base_url}/provinces/${province}/${district}`).then((response) => {
+                            this.sub_districts = response.data;
+                        });
+                    },
+                    onProvinceChanged(e) {
+                        this.user.district = "";
+                        this.user.sub_district = "";
+                        this.loadDistrict(e.target.value);
+                    },
+                    onDistrictChanged(e) {
+                        this.user.sub_district = "";
+                        this.loadSubDistrict(this.user.province, e.target.value);
+                    },
+                    async submitUpdate(e) {
+                        e.preventDefault();
+
+
+                        axios.defaults.headers.common["Authorization"] = `Bearer ${this.token}`;
+                        await axios(
+                            {
+                                method: "put",
+                                url: `${this.base_url}/profile`,
+                                data: this.user
+                            }
+                        ).then(async (response) => {
+                            this.$refs['closeModal'].click();
+                            Swal.fire({
+                                title: "Good job!",
+                                text: "Update Success",
+                                icon: "success"
+                            });
+
+                        }).catch(async (error) => {
+                            this.$refs['closeModal'].click();
+
+                            Swal.fire({
+                                title: "Error!",
+                                text: "Error updating",
+                                icon: "error"
+                            });
+
+
+                        });
+                    }
+
+                }
+            }
+        ).mount("#app")
+    </script>
+</body>
+
+</html>
